@@ -6,6 +6,38 @@
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
+USTRUCT()
+struct FStudentData
+{
+	GENERATED_BODY()
+
+	FStudentData()
+	{
+		Name = TEXT("hong");
+		Order = 1;
+	}
+
+	FStudentData(FString InName, int32 InOrder) : Name(InName), Order(InOrder) {}
+
+	bool operator==(const FStudentData& InOther) const
+	{
+		return Order == InOther.Order;
+	}
+
+	friend FORCEINLINE uint32 GetTypeHash(const FStudentData& InStudentData)
+	{
+		return GetTypeHash(InStudentData.Order);
+	}
+
+
+	UPROPERTY()
+	FString Name;
+
+	UPROPERTY()
+	int32 Order;
+};
+
+
 /**
  * 
  */
@@ -16,5 +48,13 @@ class UNREALCONTAINER_API UMyGameInstance : public UGameInstance
 
 public:
 	virtual void Init() override;
+
+private:
+	TArray<FStudentData> StudentData;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UStudent>> Students;
 	
+	TMap<int32, FString> StudentsMap;
+
 };
